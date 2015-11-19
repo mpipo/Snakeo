@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import grid.Grid;
+import java.awt.Color;
+import java.awt.Point;
 
 /**
  *
@@ -23,7 +25,7 @@ class Map extends Environment {
     public Map() {
         this.setBackground(Color.ORANGE);
         
-        grid = new Grid();
+        grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.yellow);
     }
 
     @Override
@@ -48,6 +50,13 @@ class Map extends Environment {
 
     @Override
     public void paintEnvironment(Graphics graphics) {
+        if (grid != null) {
+            grid.paintComponent(graphics);
+        }
+        
+        if (bob != null) {
+            bob.draw(graphics);
+        }
     }
     
 }
