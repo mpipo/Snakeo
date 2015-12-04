@@ -7,6 +7,7 @@ package snakeo;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 
 /**
  *
@@ -36,7 +37,21 @@ public class Barrier {
                 true);
     }
     
+    public Point getLocation(){
+        return new Point(x, y);
+    }
     public int getX() {
         return x;
+    }
+    public int setX(int x) {
+        this.x = x;
+        return 0;
+    }
+    public int getY() {
+        return y;
+    }
+    public int setY(int y) {
+        this.y = y;
+        return 0;
     }
 }

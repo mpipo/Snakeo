@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import grid.Grid;
 import java.awt.Color;
 import java.awt.Point;
+import static java.lang.Thread.sleep;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,31 +25,57 @@ class Map extends Environment implements CellDataProviderIntf {
 
     private final Grid grid;
     private Snake lenny;
-    private Barrier myBarrier;
+    private ArrayList<Barrier> barriers;
     
     public Map() {
         this.setBackground(Color.ORANGE);
         
         grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.yellow);
         lenny = new Snake(Direction.LEFT, grid);
-        myBarrier = new Barrier(10, 15, Color.GREEN, this, false);
+        barriers = new ArrayList<>();
+        barriers.add(new Barrier(10, 10, Color.GREEN, this, false));
+        barriers.add(new Barrier(10, 11, Color.GREEN, this, false));
+        barriers.add(new Barrier(10, 12, Color.GREEN, this, false));
+        barriers.add(new Barrier(10, 13, Color.GREEN, this, false));
+        barriers.add(new Barrier(10, 14, Color.GREEN, this, false));
+        barriers.add(new Barrier(10, 15, Color.GREEN, this, false));
+        barriers.add(new Barrier(10, 16, Color.GREEN, this, false));
+//        myBarrier = new Barrier(10, 15, Color.GREEN, this, false);
     }
 
     @Override
     public void initializeEnvironment() {
     }
 
+    int moveDelay = 0;
+    int moveDelayLimit = 5;
+    
     @Override
     public void timerTaskHandler() {
         if (lenny != null) {
-            try {
-                lenny.move();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+            /* if counted to limit, then move snake and reset counter, else keep counting */
+            if (moveDelay >= moveDelayLimit) {
+                moveDelay = 0;
+                try {
+                    lenny.move();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                moveDelay++;
             }
+                checkIntersections();
+        }
     }
+    
+    public void checkIntersections(){
+        for (Barrier barrier : barriers) {
+            if (barrier.getLocation().equals(lenny.getHead())) {
+                lenny.addHealth(-1000);
+            }
+        }
     }
-
+    
     @Override
     public void keyPressedHandler(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -77,11 +105,21 @@ class Map extends Environment implements CellDataProviderIntf {
         }
         
         if (lenny != null) {
-            lenny.draw(graphics);
+            try {
+                lenny.draw(graphics);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
-        if (myBarrier != null) {
-            myBarrier.draw(graphics);
+        graphics.drawString("hue", 25, 25);
+//        
+//        if (myBarrier != null) {
+//            myBarrier.draw(graphics);
+//        }
+        if (barriers != null) {
+            for (int i = 0; i < barriers.size(); i++) {
+                barriers.get(i).draw(graphics);
+            }
         }
     }
 
