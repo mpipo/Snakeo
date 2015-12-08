@@ -21,7 +21,7 @@ class Snake {
     private Direction direction = Direction.LEFT;
     private ArrayList<Point> body;
     private Grid grid;
-    private Color bodyColor = Color.BLACK;
+    private Color bodyColor = Color.WHITE;
     private int health = 100;
 
     public void draw(Graphics graphics) throws InterruptedException {
@@ -62,7 +62,7 @@ class Snake {
 //        sleep(100);
         } else {
             bodyColor = Color.RED;
-            System.out.println("oh no is ded");
+            System.out.println("wasted");
         }
     }
 
@@ -102,6 +102,10 @@ class Snake {
         return health;
     }
 
+    public boolean isDead(){
+        return health <= 0;
+    }
+    
     /**
      * @param health the health to set
      */

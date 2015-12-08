@@ -10,7 +10,9 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import grid.Grid;
+import images.ResourceTools;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.Point;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
@@ -26,12 +28,16 @@ class Map extends Environment implements CellDataProviderIntf {
     private final Grid grid;
     private Snake lenny;
     private ArrayList<Barrier> barriers;
+    private Image healthImage;
     
     public Map() {
-        this.setBackground(Color.ORANGE);
+        this.setBackground(Color.BLACK);
         
-        grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.yellow);
+        grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.WHITE);
         lenny = new Snake(Direction.LEFT, grid);
+        
+        healthImage = ResourceTools.loadImageFromResource("ui/hb_empty.png");
+        
         barriers = new ArrayList<>();
         barriers.add(new Barrier(10, 10, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 11, Color.GREEN, this, false));
@@ -76,6 +82,10 @@ class Map extends Environment implements CellDataProviderIntf {
         }
     }
     
+    public void checkObjects(){
+//        for 
+    }
+    
     @Override
     public void keyPressedHandler(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -111,7 +121,6 @@ class Map extends Environment implements CellDataProviderIntf {
                 Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        graphics.drawString("hue", 25, 25);
 //        
 //        if (myBarrier != null) {
 //            myBarrier.draw(graphics);
@@ -119,6 +128,15 @@ class Map extends Environment implements CellDataProviderIntf {
         if (barriers != null) {
             for (int i = 0; i < barriers.size(); i++) {
                 barriers.get(i).draw(graphics);
+            }
+        }
+    }
+    
+    public void printHealthBar(Graphics graphics) {
+        while (true) {
+            if (lenny.isDead()) {
+                graphics.drawImage(healthImage, 480, 90, null);
+            
             }
         }
     }
