@@ -52,6 +52,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
 
         grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.LEFT, grid, this);
+        createRectEdge(60, 30, 0, 0);
 
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
 /*        barriers = new ArrayList<>();
@@ -205,7 +206,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
 
             }
         }
-        drawRectEdge(graphics, 60, 30, 0, 0);
+//        drawRectEdge(graphics, 30, 15, 0, 0);
 //        printHealthBar(graphics);
     }
 
@@ -218,26 +219,26 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
         }
     } */
 
-    public void drawRectEdge(Graphics graphics, int width, int height, int xst, int yst){
+    public void createRectEdge(int width, int height, int xst, int yst){
         barriers = new ArrayList<>();
         // upper
-        for (int x = xst; x < width; x++) {
+        for (int x = xst; x < width + xst; x++) {
             barriers.add(new Barrier(x, 0, Color.GREEN, this, false));
         }
         // right side
-        for (int y = yst; y < height; y++) {
+        for (int y = yst; y <= height + yst; y++) {
             barriers.add(new Barrier(width, y, Color.GREEN, this, false));
         }
         // bottom
-        for (int x = xst; x < width; x++) {
+        for (int x = xst; x < width + xst; x++) {
             barriers.add(new Barrier(x, height, Color.GREEN, this, false));
         }
         // left side
-        for (int y = yst; y < height; y++) {
+        for (int y = yst; y < height + yst; y++) {
             barriers.add(new Barrier(0, y, Color.GREEN, this, false));
         }
-        
     }
+    
     @Override
     public int getCellWidth() {
         return grid.getCellWidth();
