@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
  *
  * @author panpjp
  */
-class Map extends Environment implements CellDataProviderIntf {
+class Map extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
 
     private final Grid grid;
     private Snake lenny;
@@ -51,7 +51,7 @@ class Map extends Environment implements CellDataProviderIntf {
         this.setBackground(Color.WHITE);
 
         grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.BLACK);
-        lenny = new Snake(Direction.LEFT, grid);
+        lenny = new Snake(Direction.LEFT, grid, this);
 
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
 /*        barriers = new ArrayList<>();
@@ -98,7 +98,7 @@ class Map extends Environment implements CellDataProviderIntf {
             } else {
                 moveDelay++;
             }
-            checkIntersections();
+//            checkIntersections();
         }
     }
 
@@ -106,10 +106,21 @@ class Map extends Environment implements CellDataProviderIntf {
         if (barriers != null) {
             for (Barrier barrier : barriers) {
                 if (barrier.getLocation().equals(lenny.getHead())) {
-                    lenny.addHealth(-1000);
+                    lenny.rmHealth(100);
                 }
             }
         }
+    }
+
+    public boolean checkBarriers(Point location) {
+        if (barriers != null) {
+            for (Barrier barrier : barriers) {
+                if (barrier.getLocation().equals(location)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void checkObjects() {
@@ -140,6 +151,33 @@ class Map extends Environment implements CellDataProviderIntf {
     public void environmentMouseClicked(MouseEvent e) {
     }
 
+    private Image getHealthImage() {
+        int snakeHealth = lenny.getHealthRounded();
+        if (snakeHealth <= 10) {
+            return healthBar00;
+        } else if (snakeHealth <= 20) {
+            return healthBar10;
+        } else if (snakeHealth <= 30) {
+            return healthBar20;
+        } else if (snakeHealth <= 40) {
+            return healthBar30;
+        } else if (snakeHealth <= 50) {
+            return healthBar40;
+        } else if (snakeHealth <= 60) {
+            return healthBar50;
+        } else if (snakeHealth <= 70) {
+            return healthBar60;
+        } else if (snakeHealth <= 80) {
+            return healthBar70;
+        } else if (snakeHealth <= 90) {
+            return healthBar80;
+        } else if (snakeHealth <= 100) {
+            return healthBar90;
+        } else {
+            return healthBar100;
+        }
+    }
+
     @Override
     public void paintEnvironment(Graphics graphics) {
         if (grid != null) {
@@ -148,8 +186,9 @@ class Map extends Environment implements CellDataProviderIntf {
 
         if (lenny != null) {
             lenny.draw(graphics);
-            
         }
+        
+        graphics.drawImage(getHealthImage(), 10, 10, this);
 //        
 //        if (myBarrier != null) {
 //            myBarrier.draw(graphics);
@@ -166,7 +205,7 @@ class Map extends Environment implements CellDataProviderIntf {
 
             }
         }
-        drawRectEdge(graphics, 60, 30);
+        drawRectEdge(graphics, 60, 30, 0, 0);
 //        printHealthBar(graphics);
     }
 
@@ -179,22 +218,22 @@ class Map extends Environment implements CellDataProviderIntf {
         }
     } */
 
-    public void drawRectEdge(Graphics graphics, int width, int height){
+    public void drawRectEdge(Graphics graphics, int width, int height, int xst, int yst){
         barriers = new ArrayList<>();
         // upper
-        for (int x = 0; x < width; x++) {
+        for (int x = xst; x < width; x++) {
             barriers.add(new Barrier(x, 0, Color.GREEN, this, false));
         }
         // right side
-        for (int y = 0; y < height; y++) {
+        for (int y = yst; y < height; y++) {
             barriers.add(new Barrier(width, y, Color.GREEN, this, false));
         }
         // bottom
-        for (int x = 0; x < width; x++) {
+        for (int x = xst; x < width; x++) {
             barriers.add(new Barrier(x, height, Color.GREEN, this, false));
         }
         // left side
-        for (int y = 0; y < height; y++) {
+        for (int y = yst; y < height; y++) {
             barriers.add(new Barrier(0, y, Color.GREEN, this, false));
         }
         
@@ -218,5 +257,23 @@ class Map extends Environment implements CellDataProviderIntf {
     public int getSystemCoordY(int x, int y) {
         return grid.getCellSystemCoordinate(x, y).y;
     }
+
+//<editor-fold defaultstate="collapsed" desc="LocationValidatorIntf">
+    @Override
+    public Point validate(Point proposedLocation) {
+        //check is he is trying to put his hean into a wall
+        // - is so, block the damn snake!!!!!!!
+        //          make a farting noise
+        //          say something mean to the player...
+        
+        if (checkBarriers(proposedLocation)) {
+            lenny.addHealth(-1);
+            lenny.setBlocked(true);
+            System.out.println("Hey, you're a crappy driver...");
+        }
+        return proposedLocation;
+    }
+//</editor-fold>
+
 
 }
