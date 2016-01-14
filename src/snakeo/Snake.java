@@ -21,10 +21,10 @@ class Snake {
     private Direction direction = Direction.LEFT;
     private ArrayList<Point> body;
     private Grid grid;
-    private Color bodyColor = Color.WHITE;
+    private Color bodyColor = Color.GREEN;
     private int health = 100;
 
-    public void draw(Graphics graphics) throws InterruptedException {
+    public void draw(Graphics graphics) {
         graphics.setColor(bodyColor);
         for (int i = 0; i < getBody().size(); i++) {
 //            System.out.println("body location = " + getBody().get(i).toString());
@@ -45,7 +45,7 @@ class Snake {
         body.add(new Point(5, 3));
     }
 
-    public void move() throws InterruptedException {
+    public void move() {
         if (isAlive()) {
 
             Point newHead = new Point(getHead());
@@ -59,6 +59,9 @@ class Snake {
                 newHead.y--;
             }
             getBody().add(0, newHead);
+            
+            //delete tail
+            body.remove(body.size() -1);
 //        sleep(100);
         } else {
             bodyColor = Color.RED;
@@ -106,6 +109,11 @@ class Snake {
         return health <= 0;
     }
     
+    public int getHealthRounded() {
+//        return Integer.getInteger();
+        int i = (int) Math.round(health / 10.0) * 10;
+        return i;
+    }
     /**
      * @param health the health to set
      */

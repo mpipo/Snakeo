@@ -5,6 +5,7 @@
  */
 package snakeo;
 
+import audio.AudioPlayer;
 import environment.Environment;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -14,10 +15,13 @@ import images.ResourceTools;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
+import java.io.FileInputStream;
+import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -27,17 +31,29 @@ class Map extends Environment implements CellDataProviderIntf {
 
     private final Grid grid;
     private Snake lenny;
-    private ArrayList<Barrier> barriers;
     private Image healthImage;
+    private ArrayList<Barrier> barriers;
+    private ArrayList<Item> items;
+    private Image healthBar00;
+    private Image healthBar10;
+    private Image healthBar20;
+    private Image healthBar30;
+    private Image healthBar40;
+    private Image healthBar50;
+    private Image healthBar60;
+    private Image healthBar70;
+    private Image healthBar80;
+    private Image healthBar90;
+    private Image healthBar100;
     
+
     public Map() {
-        this.setBackground(Color.BLACK);
-        
-        grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.WHITE);
+        this.setBackground(Color.WHITE);
+
+        grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.LEFT, grid);
-        
-        healthImage = ResourceTools.loadImageFromResource("ui/hb_empty.png");
-        
+
+        healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
         barriers = new ArrayList<>();
         barriers.add(new Barrier(10, 10, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 11, Color.GREEN, this, false));
@@ -47,6 +63,20 @@ class Map extends Environment implements CellDataProviderIntf {
         barriers.add(new Barrier(10, 15, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 16, Color.GREEN, this, false));
 //        myBarrier = new Barrier(10, 15, Color.GREEN, this, false);
+        healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
+        healthBar10 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_10.png");
+        healthBar20 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_20.png");
+        healthBar30 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_30.png");
+        healthBar40 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_40.png");
+        healthBar50 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_50.png");
+        healthBar60 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_60.png");
+        healthBar70 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_70.png");
+        healthBar80 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_80.png");
+        healthBar90 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_90.png");
+        healthBar100 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_full.png");
+
+        items = new ArrayList<>();
+        items.add(new Item(10, 5, "POWER_UP", ResourceTools.loadImageFromResource("snakeo/powerup.png"), this));
     }
 
     @Override
@@ -55,37 +85,35 @@ class Map extends Environment implements CellDataProviderIntf {
 
     int moveDelay = 0;
     int moveDelayLimit = 5;
-    
+
     @Override
     public void timerTaskHandler() {
         if (lenny != null) {
             /* if counted to limit, then move snake and reset counter, else keep counting */
             if (moveDelay >= moveDelayLimit) {
                 moveDelay = 0;
-                try {
-                    lenny.move();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                lenny.move();
             } else {
                 moveDelay++;
             }
-                checkIntersections();
+            checkIntersections();
         }
     }
-    
-    public void checkIntersections(){
-        for (Barrier barrier : barriers) {
-            if (barrier.getLocation().equals(lenny.getHead())) {
-                lenny.addHealth(-1000);
+
+    public void checkIntersections() {
+        if (barriers != null) {
+            for (Barrier barrier : barriers) {
+                if (barrier.getLocation().equals(lenny.getHead())) {
+                    lenny.addHealth(-1000);
+                }
             }
         }
     }
-    
-    public void checkObjects(){
+
+    public void checkObjects() {
 //        for 
     }
-    
+
     @Override
     public void keyPressedHandler(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -96,8 +124,10 @@ class Map extends Environment implements CellDataProviderIntf {
             lenny.setDirection(Direction.LEFT);
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             lenny.setDirection(Direction.RIGHT);
+        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            AudioPlayer.play("snakeo/audio/MP5.wav");
         }
-    
+
     }
 
     @Override
@@ -113,13 +143,10 @@ class Map extends Environment implements CellDataProviderIntf {
         if (grid != null) {
             grid.paintComponent(graphics);
         }
-        
+
         if (lenny != null) {
-            try {
-                lenny.draw(graphics);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            lenny.draw(graphics);
+            
         }
 //        
 //        if (myBarrier != null) {
@@ -128,16 +155,24 @@ class Map extends Environment implements CellDataProviderIntf {
         if (barriers != null) {
             for (int i = 0; i < barriers.size(); i++) {
                 barriers.get(i).draw(graphics);
+                
             }
         }
-    }
-    
-    public void printHealthBar(Graphics graphics) {
-        while (true) {
-            if (lenny.isDead()) {
-                graphics.drawImage(healthImage, 480, 90, null);
-            
+        if (items != null) {
+            for (int i = 0; i < items.size(); i++) {
+                items.get(i).draw(graphics);
+
             }
+        }
+        printHealthBar(graphics);
+    }
+
+    private void printHealthBar(Graphics graphics) {
+//        graphics.drawImage("healthBar"+snakeo.Snake.getHealthRounded(), 100, 5, 240, 40, null);
+//        System.out.println("PRINT");
+        int hr = snakeo.Snake.getHealthRounded();
+        if (hr = 10) {
+            graphics.drawImage(healthBar10, 100, 5, 240, 40, null);
         }
     }
 
@@ -161,5 +196,4 @@ class Map extends Environment implements CellDataProviderIntf {
         return grid.getCellSystemCoordinate(x, y).y;
     }
 
-    
 }
