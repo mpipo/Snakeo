@@ -54,7 +54,7 @@ class Map extends Environment implements CellDataProviderIntf {
         lenny = new Snake(Direction.LEFT, grid);
 
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
-        barriers = new ArrayList<>();
+/*        barriers = new ArrayList<>();
         barriers.add(new Barrier(10, 10, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 11, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 12, Color.GREEN, this, false));
@@ -62,6 +62,8 @@ class Map extends Environment implements CellDataProviderIntf {
         barriers.add(new Barrier(10, 14, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 15, Color.GREEN, this, false));
         barriers.add(new Barrier(10, 16, Color.GREEN, this, false));
+        */
+        
 //        myBarrier = new Barrier(10, 15, Color.GREEN, this, false);
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
         healthBar10 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_10.png");
@@ -164,18 +166,39 @@ class Map extends Environment implements CellDataProviderIntf {
 
             }
         }
-        printHealthBar(graphics);
+        drawRectEdge(graphics, 60, 30);
+//        printHealthBar(graphics);
     }
 
-    private void printHealthBar(Graphics graphics) {
-//        graphics.drawImage("healthBar"+snakeo.Snake.getHealthRounded(), 100, 5, 240, 40, null);
-//        System.out.println("PRINT");
-        int hr = snakeo.Snake.getHealthRounded();
+    
+/*    private void printHealthBar(Graphics graphics) {
+        int hr;
+        hr = snakeo.Snake.getHealthRounded();
         if (hr = 10) {
             graphics.drawImage(healthBar10, 100, 5, 240, 40, null);
         }
-    }
+    } */
 
+    public void drawRectEdge(Graphics graphics, int width, int height){
+        barriers = new ArrayList<>();
+        // upper
+        for (int x = 0; x < width; x++) {
+            barriers.add(new Barrier(x, 0, Color.GREEN, this, false));
+        }
+        // right side
+        for (int y = 0; y < height; y++) {
+            barriers.add(new Barrier(width, y, Color.GREEN, this, false));
+        }
+        // bottom
+        for (int x = 0; x < width; x++) {
+            barriers.add(new Barrier(x, height, Color.GREEN, this, false));
+        }
+        // left side
+        for (int y = 0; y < height; y++) {
+            barriers.add(new Barrier(0, y, Color.GREEN, this, false));
+        }
+        
+    }
     @Override
     public int getCellWidth() {
         return grid.getCellWidth();

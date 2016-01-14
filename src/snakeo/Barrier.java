@@ -37,6 +37,8 @@ public class Barrier {
                 true);
     }
     
+
+    
     public Point getLocation(){
         return new Point(x, y);
     }
