@@ -15,13 +15,7 @@ import images.ResourceTools;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
-import java.io.FileInputStream;
-import java.io.IOException;
-import static java.lang.Thread.sleep;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -79,7 +73,9 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
         healthBar100 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_full.png");
 
         items = new ArrayList<>();
-        items.add(new Item(10, 5, "POWER_UP", ResourceTools.loadImageFromResource("snakeo/powerup.png"), this));
+        items.add(new Item(10, 5, "HP_UP", ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"), this));
+        items.add(new Item(20, 10, "MP_UP", ResourceTools.loadImageFromResource("snakeo/items/mp_up/225x300.png"), this));
+        items.add(new Item(30, 10, "STA_UP", ResourceTools.loadImageFromResource("snakeo/items/sta_up/225x300.png"), this));
     }
 
     @Override
@@ -189,7 +185,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
             lenny.draw(graphics);
         }
         
-        graphics.drawImage(getHealthImage(), 10, 10, this);
+        graphics.drawImage(getHealthImage(), 10, 2, 240, 45, this);
 //        
 //        if (myBarrier != null) {
 //            myBarrier.draw(graphics);
@@ -262,13 +258,13 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
 //<editor-fold defaultstate="collapsed" desc="LocationValidatorIntf">
     @Override
     public Point validate(Point proposedLocation) {
-        //check is he is trying to put his hean into a wall
-        // - is so, block the damn snake!!!!!!!
+        //check if he is trying to put his head into a wall
+        // - if so, block the damn snake!!!!!!!
         //          make a farting noise
         //          say something mean to the player...
         
         if (checkBarriers(proposedLocation)) {
-            lenny.addHealth(-1);
+            lenny.addHealth(-0);
             lenny.setBlocked(true);
             System.out.println("Hey, you're a crappy driver...");
         }
