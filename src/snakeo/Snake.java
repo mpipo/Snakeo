@@ -9,7 +9,6 @@ import grid.Grid;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +37,7 @@ class Snake {
         body.add(new Point(5, 5));
         body.add(new Point(5, 4));
         body.add(new Point(5, 3));
-        health = 100;
+        hp = 100;
         blocked = false;
     }
 
@@ -78,7 +77,9 @@ class Snake {
     private ArrayList<Point> body;
     private Grid grid;
     private Color bodyColor = Color.GREEN;
-    private int health;
+    private int hp;
+    private int mp;
+    private int sta;
     private boolean blocked;
 
     public Point getHead() {
@@ -115,36 +116,36 @@ class Snake {
      * @return the health
      */
     public int getHealth() {
-        return health;
+        return hp;
     }
 
     public boolean isDead() {
-        return health <= 0;
+        return hp <= 0;
     }
 
     public int getHealthRounded() {
 //        return Integer.getInteger();
-        int i = (int) Math.round(health / 10.0) * 10;
+        int i = (int) Math.round(hp / 10.0) * 10;
         return i;
     }
 
     /**
      * @param health the health to set
      */
-    public void setHealth(int health) {
-        this.health = health;
+    public void setHealth(int hp) {
+        this.hp = hp;
     }
 
-    public void addHealth(int health) {
-        this.health += health;
+    public void addHealth(int hp) {
+        this.hp += hp;
     }
 
-    public void rmHealth(int health) {
-        this.health -= health;
+    public void rmHealth(int hp) {
+        this.hp -= hp;
     }
 
     public boolean isAlive() {
-        return (health > 0);
+        return (hp > 0);
     }
 
     /**
