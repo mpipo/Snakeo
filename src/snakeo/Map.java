@@ -24,6 +24,9 @@ import java.util.ArrayList;
  */
 class Map extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
 
+//<editor-fold defaultstate="collapsed" desc="Properties">
+    private static final Color PAUSE_OVERLAY = new Color(0, 0, 0, 160);
+
     private final Grid grid;
     private Snake lenny;
     private Image healthImage;
@@ -42,6 +45,9 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
     private Image healthBar100;
     private GameState state;
 
+    private Image menuBackground;
+
+//</editor-fold>
     public Map() {
         this.state = GameState.RUNNING;
         this.setBackground(Color.WHITE);
@@ -51,17 +57,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
         createRectEdge(60, 30, 0, 0);
 
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
-        /*        barriers = new ArrayList<>();
-         barriers.add(new Barrier(10, 10, Color.GREEN, this, false));
-         barriers.add(new Barrier(10, 11, Color.GREEN, this, false));
-         barriers.add(new Barrier(10, 12, Color.GREEN, this, false));
-         barriers.add(new Barrier(10, 13, Color.GREEN, this, false));
-         barriers.add(new Barrier(10, 14, Color.GREEN, this, false));
-         barriers.add(new Barrier(10, 15, Color.GREEN, this, false));
-         barriers.add(new Barrier(10, 16, Color.GREEN, this, false));
-         */
 
-//        myBarrier = new Barrier(10, 15, Color.GREEN, this, false);
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
         healthBar10 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_10.png");
         healthBar20 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_20.png");
@@ -149,8 +145,9 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
             } else if (state == GameState.RUNNING) {
                 state = GameState.PAUSED;
             }
+        } else if (e.getKeyCode() == KeyEvent.VK_M) {
+            state = GameState.MENU;
         }
-
     }
 
     @Override
@@ -190,37 +187,45 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
 
     @Override
     public void paintEnvironment(Graphics graphics) {
-        if (grid != null) {
-            grid.paintComponent(graphics);
-        }
+        if ((state == GameState.RUNNING) || ((state == GameState.PAUSED))) {
 
-        if (lenny != null) {
-            lenny.draw(graphics);
-        }
-
-        graphics.drawImage(getHealthImage(), 10, 2, 240, 45, this);
-//        
-//        if (myBarrier != null) {
-//            myBarrier.draw(graphics);
-//        }
-        if (barriers != null) {
-            for (int i = 0; i < barriers.size(); i++) {
-                barriers.get(i).draw(graphics);
-
+            if (grid != null) {
+                grid.paintComponent(graphics);
             }
-        }
-        if (items != null) {
-            for (int i = 0; i < items.size(); i++) {
-                items.get(i).draw(graphics);
 
+            if (lenny != null) {
+                lenny.draw(graphics);
             }
-        }
-        
-        
-        if (state == GameState.PAUSED) {
-            graphics.setFont(new Font("Arial", Font.BOLD, 60));
-            graphics.setColor(Color.red);
-            graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
+
+            graphics.drawImage(getHealthImage(), 10, 2, 240, 45, this);
+
+            if (barriers != null) {
+                for (int i = 0; i < barriers.size(); i++) {
+                    barriers.get(i).draw(graphics);
+
+                }
+            }
+            if (items != null) {
+                for (int i = 0; i < items.size(); i++) {
+                    items.get(i).draw(graphics);
+
+                }
+            }
+
+            if (state == GameState.PAUSED) {
+                graphics.setColor(PAUSE_OVERLAY);
+                graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+                graphics.setFont(new Font("Arial", Font.BOLD, 60));
+                graphics.setColor(Color.red);
+                graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
+            }
+
+        } else if (state == GameState.MENU) {
+            if (menuBackground == null) {
+                menuBackground = ResourceTools.loadImageFromResource("snakeo/ui/background/placeholder.png");
+            }
+            graphics.drawImage(menuBackground, 0, 0, this.getWidth(), this.getHeight(), null);
         }
 //        drawRectEdge(graphics, 30, 15, 0, 0);
 //        printHealthBar(graphics);
@@ -253,6 +258,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
         }
     }
 
+//<editor-fold defaultstate="collapsed" desc="CellDataProviderIntf">
     @Override
     public int getCellWidth() {
         return grid.getCellWidth();
@@ -272,6 +278,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
     public int getSystemCoordY(int x, int y) {
         return grid.getCellSystemCoordinate(x, y).y;
     }
+//</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="LocationValidatorIntf">
     @Override
