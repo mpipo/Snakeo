@@ -147,6 +147,8 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
             }
         } else if (e.getKeyCode() == KeyEvent.VK_M) {
             state = GameState.MENU;
+            
+            
         }
     }
 
@@ -226,6 +228,9 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
                 menuBackground = ResourceTools.loadImageFromResource("snakeo/ui/background/placeholder.png");
             }
             graphics.drawImage(menuBackground, 0, 0, this.getWidth(), this.getHeight(), null);
+            
+            new RMButton(400, 400, 100, 25, "Ron Rocks").draw(graphics);
+            
         }
 //        drawRectEdge(graphics, 30, 15, 0, 0);
 //        printHealthBar(graphics);
