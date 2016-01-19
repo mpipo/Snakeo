@@ -5,10 +5,12 @@
  */
 package snakeo;
 
+import images.ResourceTools;
 import java.awt.Graphics;
 import java.util.Arrays;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,9 +23,11 @@ public class Console {
     private int x, y, width, height;
     private String ConsoleTheme;
     private final String ListOfCS[];
+    private Image MissingTexture;
 
     {
         ListOfCS = new String[]{"Style_Default", "Style_Source", "Style_Beths", "Style_Unix"};
+        MissingTexture = ResourceTools.loadImageFromResource("snakeo/ui/error/missing.png");
     }
 
     public Console(int x, int y, int width, int height, String ConsoleTheme) {
@@ -43,13 +47,12 @@ public class Console {
                         graphics.fillRect(x, y, width, height);
                         graphics.setColor(Color.DARK_GRAY);
                         graphics.fillRect(x + 20, y + 20, width - 10, height - 10);
-                        graphics.setFont(new Font("Arial", Font.BOLD, 60));
-                        graphics.drawString("Hi", 400, 400);
                         log("TEST", "Message");
 //                        frameBuffer(graphics);
                     }
                 } else {
-                    log("ERROR", "Invalid ConsoleTheme");
+                    log("ERROR", "Invalid ConsoleTheme, got " + ConsoleTheme);
+                    graphics.drawImage(MissingTexture, x, y, width, height, null);
                 }
             } else {
                 log("ERROR", "Height must be higher than 0");
@@ -130,8 +133,11 @@ public class Console {
     }
 
     private void log(String Type, String Message) {
-        String s = (char)27 + "[31m[" + Type + "] " + Message;
-        System.out.println(s);
+        if (Type == "ERROR") {
+            String s = (char) 27 + "[31m[" + Type + "] " + Message;
+            System.out.println(s);
+        }
+
     }
 
     private void frameBuffer(Graphics graphics) {
