@@ -8,6 +8,9 @@ package snakeo;
 import java.awt.Graphics;
 import java.util.Arrays;
 import java.awt.Color;
+import java.awt.Font;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +23,7 @@ public class Console {
     private final String ListOfCS[];
 
     {
-        ListOfCS = new String[]{"Style_Default", "Style_Source", "Style_Bethesda", "Style_Unix"};
+        ListOfCS = new String[]{"Style_Default", "Style_Source", "Style_Beths", "Style_Unix"};
     }
 
     public Console(int x, int y, int width, int height, String ConsoleTheme) {
@@ -32,17 +35,27 @@ public class Console {
     }
 
     public void draw(Graphics graphics) {
-
-        if (Arrays.asList(ListOfCS).contains(ConsoleTheme)) {
-            if (ConsoleTheme == "Style_Default") {
-                graphics.setColor(Color.GRAY);
-                graphics.fillRect(x, y, width, height);
-                graphics.setColor(Color.DARK_GRAY);
-                graphics.fillRect(x + 20, y + 20, width - 10, height - 10);
+        if (width >= 0) {
+            if (height >= 0) {
+                if (Arrays.asList(ListOfCS).contains(ConsoleTheme)) {
+                    if (ConsoleTheme == "Style_Default") {
+                        graphics.setColor(Color.GRAY);
+                        graphics.fillRect(x, y, width, height);
+                        graphics.setColor(Color.DARK_GRAY);
+                        graphics.fillRect(x + 20, y + 20, width - 10, height - 10);
+                        graphics.setFont(new Font("Arial", Font.BOLD, 60));
+                        graphics.drawString("Hi", 400, 400);
+                        log("TEST", "Message");
+//                        frameBuffer(graphics);
+                    }
+                } else {
+                    log("ERROR", "Invalid ConsoleTheme");
+                }
+            } else {
+                log("ERROR", "Height must be higher than 0");
             }
         } else {
-            System.out.println("ERROR");
-
+            log("ERROR", "Width must be higher than 0");
         }
     }
 
@@ -114,5 +127,15 @@ public class Console {
      */
     public void setConsoleTheme(String ConsoleTheme) {
         this.ConsoleTheme = ConsoleTheme;
+    }
+
+    private void log(String Type, String Message) {
+        String s = (char)27 + "[31m[" + Type + "] " + Message;
+        System.out.println(s);
+    }
+
+    private void frameBuffer(Graphics graphics) {
+        graphics.setFont(new Font("Arial", Font.BOLD, 60));
+        graphics.drawString("Hi", 200, 200);
     }
 }
