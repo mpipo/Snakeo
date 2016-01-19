@@ -10,5 +10,5 @@ package snakeo;
  * @author panpjp
  */
 public enum GameState {
-    MENU, RUNNING, PAUSED
+    MENU, RUNNING, PAUSED, CONSOLE
 }

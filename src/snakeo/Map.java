@@ -147,8 +147,12 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
             }
         } else if (e.getKeyCode() == KeyEvent.VK_M) {
             state = GameState.MENU;
-            
-            
+        } else if (e.getKeyCode() == KeyEvent.VK_SLASH) {
+            if (state == GameState.CONSOLE) {
+                state = GameState.RUNNING;
+            } else if (state == GameState.RUNNING) {
+                state = GameState.CONSOLE;
+            }
         }
     }
 
@@ -189,7 +193,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
 
     @Override
     public void paintEnvironment(Graphics graphics) {
-        if ((state == GameState.RUNNING) || ((state == GameState.PAUSED))) {
+        if ((state == GameState.RUNNING) || ((state == GameState.PAUSED)) || ((state == GameState.CONSOLE))) {
 
             if (grid != null) {
                 grid.paintComponent(graphics);
@@ -222,15 +226,19 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
                 graphics.setColor(Color.red);
                 graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
             }
+            
+            else if (state == GameState.CONSOLE) {
+                new Console(0, 0, this.getWidth(), this.getHeight(), "Style_Default").draw(graphics);
+            }
 
         } else if (state == GameState.MENU) {
             if (menuBackground == null) {
                 menuBackground = ResourceTools.loadImageFromResource("snakeo/ui/background/placeholder.png");
             }
             graphics.drawImage(menuBackground, 0, 0, this.getWidth(), this.getHeight(), null);
-            
+
             new RMButton(400, 400, 100, 25, "Ron Rocks").draw(graphics);
-            
+
         }
 //        drawRectEdge(graphics, 30, 15, 0, 0);
 //        printHealthBar(graphics);
