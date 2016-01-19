@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +21,7 @@ public class Console {
     private int x, y, width, height;
     private String ConsoleTheme;
     private final String ListOfCS[];
-    private Image MissingTexture;
+    private final Image MissingTexture;
 
     {
         ListOfCS = new String[]{"Style_Default", "Style_Source", "Style_Beths", "Style_Unix"};
@@ -42,7 +40,7 @@ public class Console {
         if (width >= 0) {
             if (height >= 0) {
                 if (Arrays.asList(ListOfCS).contains(ConsoleTheme)) {
-                    if (ConsoleTheme == "Style_Default") {
+                    if ("Style_Default".equals(ConsoleTheme)) {
                         graphics.setColor(Color.GRAY);
                         graphics.fillRect(x, y, width, height);
                         graphics.setColor(Color.DARK_GRAY);
@@ -133,7 +131,7 @@ public class Console {
     }
 
     private void log(String Type, String Message) {
-        if (Type == "ERROR") {
+        if ("ERROR".equals(Type)) {
             String s = (char) 27 + "[31m[" + Type + "] " + Message;
             System.out.println(s);
         }
