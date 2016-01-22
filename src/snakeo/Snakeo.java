@@ -5,18 +5,18 @@
  */
 package snakeo;
 import environment.ApplicationStarter;
+import java.awt.Dimension;
 /**
  *
  * @author panpjp
  */
 public class Snakeo {
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ApplicationStarter.run("Snakeo", new Map());
+        ApplicationStarter.run(null, "Snakeo", new Dimension(1280, 800), new Map());
     }
     
 }
