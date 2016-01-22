@@ -34,9 +34,9 @@ class Snake {
         this.validator = validator;
 
         body = new ArrayList<>();
-        body.add(new Point(5, 5));
-        body.add(new Point(5, 4));
-        body.add(new Point(5, 3));
+        body.add(new Point(20, 9));
+        body.add(new Point(20, 8));
+        body.add(new Point(20, 7));
         hp = 100;
         blocked = false;
     }
