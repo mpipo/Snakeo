@@ -17,16 +17,17 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
+import snakeo.levels.lv1;
 
 /**
  *
  * @author panpjp
  */
-class Map extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
+final class Map extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
 
 //<editor-fold defaultstate="collapsed" desc="Properties">
     private static final Color PAUSE_OVERLAY = new Color(0, 0, 0, 160);
-
+    public int currentLevel;
     private final Grid grid;
     private Snake lenny;
     private Image healthImage;
@@ -52,10 +53,16 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
         this.state = GameState.RUNNING;
         this.setBackground(Color.WHITE);
 
-        grid = new Grid(55, 30, 20, 20, new Point(20, 50), Color.BLACK);
-        lenny = new Snake(Direction.LEFT, grid, this);
+        grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
+        lenny = new Snake(Direction.RIGHT, grid, this);
         createRectEdge(60, 30, 0, 0);
+        lv1.draw();
+        currentLevel = 1;
+        if (currentLevel == 1) {
+            
+        } else if (state == GameState.REDRAW) {
 
+        }
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
 
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
@@ -90,7 +97,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
             if (lenny != null) {
                 /* if counted to limit, then move snake and reset counter, else keep counting */
                 if (moveDelay >= moveDelayLimit) {
-                    moveDelay = 0;
+                    moveDelay = 3;
                     lenny.move();
                 } else {
                     moveDelay++;
@@ -225,9 +232,7 @@ class Map extends Environment implements CellDataProviderIntf, LocationValidator
                 graphics.setFont(new Font("Arial", Font.BOLD, 60));
                 graphics.setColor(Color.red);
                 graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
-            }
-            
-            else if (state == GameState.CONSOLE) {
+            } else if (state == GameState.CONSOLE) {
                 new Console(0, 0, this.getWidth(), this.getHeight(), "Style_Default").draw(graphics);
             }
 
