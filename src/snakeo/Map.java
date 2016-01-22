@@ -235,8 +235,9 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
                 graphics.setFont(new Font("Arial", Font.BOLD, 60));
                 graphics.setColor(Color.red);
                 graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
+                
             } else if (state == GameState.CONSOLE) {
-                new Console(0, 0, this.getWidth(), this.getHeight(), "Style_Default").draw(graphics);
+                new Console(0, 350, this.getWidth(), this.getHeight()/2, "Style_Default").draw(graphics);
             }
 
         } else if (state == GameState.MENU) {
