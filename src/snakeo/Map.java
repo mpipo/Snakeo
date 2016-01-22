@@ -17,7 +17,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
-import snakeo.levels.lv1;
+import snakeo.levels.Level;
 
 /**
  *
@@ -31,7 +31,7 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
     private final Grid grid;
     private final Snake lenny;
     private final Image healthImage;
-    private lv1 lv1;
+    private Level lv1;
     private ArrayList<Barrier> barriers;
     private final ArrayList<Item> items;
     private final Image healthBar00;
@@ -57,7 +57,7 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.RIGHT, grid, this);
         createRectEdge(60, 30, 0, 0);
-//        lv1 = new lv1(grid);
+//        Level = new Level(grid);
         currentLevel = 1;
         if (currentLevel == 1) {
             
