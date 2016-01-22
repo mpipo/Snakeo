@@ -5,8 +5,8 @@
  */
 package snakeo.levels;
 
+import grid.Grid;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import snakeo.Barrier;
 import snakeo.CellDataProviderIntf;
@@ -16,9 +16,12 @@ import snakeo.CellDataProviderIntf;
  * @author panpjp
  */
 public class lv1 {
+    private final Grid grid;
+    ArrayList<Object> barriers;
 
-    public void draw() {
-        ArrayList<Object> barriers = new ArrayList<>();
+    public lv1(Grid grid) {
+        this.barriers = new ArrayList<>();
         barriers.add(new Barrier(1, 1, Color.BLACK, (CellDataProviderIntf) this, false));
     }
+    
 }
