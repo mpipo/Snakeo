@@ -29,21 +29,22 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
     private static final Color PAUSE_OVERLAY = new Color(0, 0, 0, 160);
     public int currentLevel;
     private final Grid grid;
-    private Snake lenny;
-    private Image healthImage;
+    private final Snake lenny;
+    private final Image healthImage;
+    private lv1 lv1;
     private ArrayList<Barrier> barriers;
-    private ArrayList<Item> items;
-    private Image healthBar00;
-    private Image healthBar10;
-    private Image healthBar20;
-    private Image healthBar30;
-    private Image healthBar40;
-    private Image healthBar50;
-    private Image healthBar60;
-    private Image healthBar70;
-    private Image healthBar80;
-    private Image healthBar90;
-    private Image healthBar100;
+    private final ArrayList<Item> items;
+    private final Image healthBar00;
+    private final Image healthBar10;
+    private final Image healthBar20;
+    private final Image healthBar30;
+    private final Image healthBar40;
+    private final Image healthBar50;
+    private final Image healthBar60;
+    private final Image healthBar70;
+    private final Image healthBar80;
+    private final Image healthBar90;
+    private final Image healthBar100;
     private GameState state;
 
     private Image menuBackground;
@@ -56,7 +57,7 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.RIGHT, grid, this);
         createRectEdge(60, 30, 0, 0);
-        lv1.draw();
+//        lv1 = new lv1(grid);
         currentLevel = 1;
         if (currentLevel == 1) {
             
@@ -160,6 +161,8 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
             } else if (state == GameState.RUNNING) {
                 state = GameState.CONSOLE;
             }
+        } else if (e.getKeyCode() == KeyEvent.VK_G) {
+            lenny.addGrowthCounter(3);
         }
     }
 
