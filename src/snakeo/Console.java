@@ -41,11 +41,13 @@ public class Console {
             if (height >= 0) {
                 if (Arrays.asList(ListOfCS).contains(ConsoleTheme)) {
                     if ("Style_Default".equals(ConsoleTheme)) {
-                        graphics.setColor(Color.GRAY);
+/*                        graphics.setColor(Color.GRAY);
                         graphics.fillRect(x, y, width, height);
                         graphics.setColor(Color.DARK_GRAY);
                         graphics.fillRect(x + 20, y + 20, width - 10, height - 10);
-                        log("TEST", "Message");
+                        log("TEST", "Message"); */
+                        graphics.setColor(new Color(0, 0, 0, 150));
+                        graphics.fillRect(x, y, width, height);
 //                        frameBuffer(graphics);
                     }
                 } else {
