@@ -62,7 +62,16 @@ class Snake {
                 getBody().add(0, newHead);
 
                 //delete tail
-                body.remove(body.size() - 1);
+                // if the growth counter is greater than zero
+                // - do not remove the tail
+                // - subtract one from the growth counter
+                // else (the growthCounter is less than or equal to zero)
+                // - delete the tail
+                if (growthCounter > 0) {
+                    growthCounter--;
+                } else {
+                    body.remove(body.size() - 1);
+                }
             }
 //        sleep(100);
         } else {
@@ -75,11 +84,12 @@ class Snake {
     private Direction direction = Direction.RIGHT;
     private final LocationValidatorIntf validator;
     private ArrayList<Point> body;
-    private Grid grid;
+    private final Grid grid;
     private Color bodyColor = Color.GREEN;
     private int hp;
     private int mp;
     private int sta;
+    private int growthCounter;
     private boolean blocked;
 
     public Point getHead() {
@@ -161,6 +171,25 @@ class Snake {
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
-//</editor-fold>
 
+
+    /**
+     * @return the growthCounter
+     */
+    public int getGrowthCounter() {
+        return growthCounter;
+    }
+
+    /**
+     * @param growthCounter the growthCounter to set
+     */
+    public void setGrowthCounter(int growthCounter) {
+        this.growthCounter = growthCounter;
+    }
+    
+    public void addGrowthCounter(int growth) {
+        this.growthCounter += growth;
+    }
+//</editor-fold>
+    
 }
