@@ -5,9 +5,7 @@
  */
 package snakeo.levels;
 
-import grid.Grid;
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 import snakeo.Barrier;
 import snakeo.CellDataProviderIntf;
@@ -31,6 +29,7 @@ public class Level {
     
     private int level = 0;
 //    private int itemCount;
+
     
     public int getItemCount(){
         if (getLevel() == 1) {
@@ -75,11 +74,19 @@ public class Level {
     public ArrayList<Barrier> getBarriers() {
         barriers.clear();
         
+//<editor-fold defaultstate="collapsed" desc="Level 1">
         if (level == 1) {
 //            barriers.add(new );
+            barriers.add(new Barrier(2, 1, Color.yellow, (CellDataProviderIntf) this, false));
+            barriers.add(new Barrier(2, 2, Color.yellow, (CellDataProviderIntf) this, false));
+            barriers.add(new Barrier(2, 3, Color.yellow, (CellDataProviderIntf) this, false));
 //            ...
-        }else if (level == 2){
+//</editor-fold>
+            
+//<editor-fold defaultstate="collapsed" desc="Level 2">
+        } else if (level == 2){
 //            ...
+//</editor-fold>
         }
         
         return barriers;
