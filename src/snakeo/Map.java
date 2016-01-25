@@ -57,7 +57,7 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.RIGHT, grid, this);
         createRectEdge(60, 30, 0, 0);
-//        Level = new Level(grid);
+        
         currentLevel = 1;
         if (currentLevel == 1) {
             
@@ -82,6 +82,7 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         items.add(new Item(10, 5, "HP_UP", ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"), this));
         items.add(new Item(20, 10, "MP_UP", ResourceTools.loadImageFromResource("snakeo/items/mp_up/225x300.png"), this));
         items.add(new Item(30, 10, "STA_UP", ResourceTools.loadImageFromResource("snakeo/items/sta_up/225x300.png"), this));
+//        int level = Level.getLevel();
     }
 
     @Override
@@ -212,6 +213,8 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
             if (lenny != null) {
                 lenny.draw(graphics);
             }
+            
+            
 
             graphics.drawImage(getHealthImage(), 10, 2, 240, 45, this);
 
