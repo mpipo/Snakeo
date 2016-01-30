@@ -23,7 +23,7 @@ import snakeo.levels.Level;
  *
  * @author panpjp
  */
-final class Main extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
+final class Garden extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
 
 //<editor-fold defaultstate="collapsed" desc="Properties">
     private static final Color PAUSE_OVERLAY = new Color(0, 0, 0, 160);
@@ -50,11 +50,11 @@ final class Main extends Environment implements CellDataProviderIntf, LocationVa
 
 //</editor-fold>
     
-    public Main() {
-        this.state = GameState.RUNNING;
+    public Garden() {
+        this.state = GameState.MENU;
         this.setBackground(Color.WHITE);
 
-        grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
+        grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.GREEN);
         lenny = new Snake(Direction.RIGHT, grid, this);
         
         level = new Level(1, this);
@@ -78,6 +78,8 @@ final class Main extends Environment implements CellDataProviderIntf, LocationVa
         items.add(new Item(10, 5, "HP_UP", ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"), this));
         items.add(new Item(20, 10, "MP_UP", ResourceTools.loadImageFromResource("snakeo/items/mp_up/225x300.png"), this));
         items.add(new Item(30, 10, "STA_UP", ResourceTools.loadImageFromResource("snakeo/items/sta_up/225x300.png"), this));
+    
+        this.state = GameState.RUNNING;
     }
 
     @Override
@@ -201,14 +203,14 @@ final class Main extends Environment implements CellDataProviderIntf, LocationVa
     public void paintEnvironment(Graphics graphics) {
         if ((state == GameState.RUNNING) || ((state == GameState.PAUSED)) || ((state == GameState.CONSOLE))) {
 
-            if (grid != null) {
-                grid.paintComponent(graphics);
-            }
-            
             if (level != null) {
                 level.draw(graphics);
             }
 
+            if (grid != null) {
+                grid.paintComponent(graphics);
+            }
+            
             if (lenny != null) {
                 lenny.draw(graphics);
             }

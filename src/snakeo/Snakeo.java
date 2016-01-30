@@ -16,7 +16,7 @@ public class Snakeo {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ApplicationStarter.run(null, "Snakeo", new Dimension(1280, 700), new Main());
+        ApplicationStarter.run(null, "Snakeo", new Dimension(1280, 700), new Garden());
     }
     
 }
