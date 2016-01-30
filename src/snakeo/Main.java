@@ -46,16 +46,19 @@ final class Main extends Environment implements CellDataProviderIntf, LocationVa
     private final Image healthBar100;
     private GameState state;
     private Image menuBackground;
-    private Object drawtx;
+    private Level level;
 
 //</editor-fold>
+    
     public Main() {
         this.state = GameState.RUNNING;
         this.setBackground(Color.WHITE);
 
         grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.RIGHT, grid, this);
-
+        
+        level = new Level(1, this);
+        
         createRectEdge(60, 30, 0, 0);
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
 
@@ -200,6 +203,10 @@ final class Main extends Environment implements CellDataProviderIntf, LocationVa
 
             if (grid != null) {
                 grid.paintComponent(graphics);
+            }
+            
+            if (level != null) {
+                level.draw(graphics);
             }
 
             if (lenny != null) {
