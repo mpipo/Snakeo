@@ -23,7 +23,7 @@ import snakeo.levels.Level;
  *
  * @author panpjp
  */
-final class Map extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
+final class Main extends Environment implements CellDataProviderIntf, LocationValidatorIntf {
 
 //<editor-fold defaultstate="collapsed" desc="Properties">
     private static final Color PAUSE_OVERLAY = new Color(0, 0, 0, 160);
@@ -31,7 +31,6 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
     private final Grid grid;
     private final Snake lenny;
     private final Image healthImage;
-    private Level lv1;
     private ArrayList<Barrier> barriers;
     private final ArrayList<Item> items;
     private final Image healthBar00;
@@ -46,24 +45,18 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
     private final Image healthBar90;
     private final Image healthBar100;
     private GameState state;
-
     private Image menuBackground;
+    private Object drawtx;
 
 //</editor-fold>
-    public Map() {
+    public Main() {
         this.state = GameState.RUNNING;
         this.setBackground(Color.WHITE);
 
         grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.BLACK);
         lenny = new Snake(Direction.RIGHT, grid, this);
-        createRectEdge(60, 30, 0, 0);
-        
-        currentLevel = 1;
-        if (currentLevel == 1) {
-            
-        } else if (state == GameState.REDRAW) {
 
-        }
+        createRectEdge(60, 30, 0, 0);
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
 
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
@@ -82,7 +75,6 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         items.add(new Item(10, 5, "HP_UP", ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"), this));
         items.add(new Item(20, 10, "MP_UP", ResourceTools.loadImageFromResource("snakeo/items/mp_up/225x300.png"), this));
         items.add(new Item(30, 10, "STA_UP", ResourceTools.loadImageFromResource("snakeo/items/sta_up/225x300.png"), this));
-//        int level = Level.getLevel();
     }
 
     @Override
@@ -213,9 +205,6 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
             if (lenny != null) {
                 lenny.draw(graphics);
             }
-            
-            
-
             graphics.drawImage(getHealthImage(), 10, 2, 240, 45, this);
 
             if (barriers != null) {
@@ -238,9 +227,9 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
                 graphics.setFont(new Font("Arial", Font.BOLD, 60));
                 graphics.setColor(Color.red);
                 graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
-                
+
             } else if (state == GameState.CONSOLE) {
-                new Console(0, 350, this.getWidth(), this.getHeight()/2, "Style_Default").draw(graphics);
+                new Console(0, 350, this.getWidth(), this.getHeight() / 2, "Style_Default").draw(graphics);
             }
 
         } else if (state == GameState.MENU) {
@@ -283,6 +272,7 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         }
     }
 
+
 //<editor-fold defaultstate="collapsed" desc="CellDataProviderIntf">
     @Override
     public int getCellWidth() {
@@ -321,9 +311,5 @@ final class Map extends Environment implements CellDataProviderIntf, LocationVal
         return proposedLocation;
     }
 //</editor-fold>
-
-    private void openConsole(Graphics graphics) {
-        graphics.drawString("Console", 300, 100);
-    }
 
 }
