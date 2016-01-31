@@ -37,13 +37,13 @@ public final class Level {
     public static final int TEXTURE_GRASS = 1;
     public static final int TEXTURE_GRASS_DIRT = 2;
     public static final int TEXTURE_VOID = 3;
-    public static final int TEXTURE_BARRIER = 4;
+    public static final int TEXTURE_WATER = 4;
 
     public static final String TEXTURE_NAME_NONE = "NONE";
     public static final String TEXTURE_NAME_GRASS = "GRASS";
     public static final String TEXTURE_NAME_GRASS_DIRT = "GRASS_DIRT";
     public static final String TEXTURE_NAME_VOID = "VOID";
-    public static final String TEXTURE_NAME_BARRIER = "BARRIER";
+    public static final String TEXTURE_NAME_WATER = "WATER";
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="Properties">
@@ -125,7 +125,7 @@ public final class Level {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 //</editor-fold>
-    
+
 //<editor-fold defaultstate="collapsed" desc="Constructors">
     {
         barriers = new ArrayList<>();
@@ -136,14 +136,14 @@ public final class Level {
         imageManager.addImage(TEXTURE_NAME_GRASS, ResourceTools.loadImageFromResource("snakeo/graphics/map/ground/grass.png"));
         imageManager.addImage(TEXTURE_NAME_GRASS_DIRT, ResourceTools.loadImageFromResource("snakeo/graphics/map/ground/grass_dirt_down.png"));
         imageManager.addImage(TEXTURE_NAME_VOID, ResourceTools.loadImageFromResource("snakeo/graphics/map/void/void.png"));
-        imageManager.addImage(TEXTURE_NAME_BARRIER, ResourceTools.loadImageFromResource("snakeo/graphics/map/ground/grass_dirt_down.png"));
+        imageManager.addImage(TEXTURE_NAME_WATER, ResourceTools.loadImageFromResource("snakeo/graphics/map/ground/water.png"));
 
         imageNames = new HashMap<>();
         imageNames.put(TEXTURE_NONE, TEXTURE_NAME_NONE);
         imageNames.put(TEXTURE_GRASS, TEXTURE_NAME_GRASS);
         imageNames.put(TEXTURE_GRASS_DIRT, TEXTURE_NAME_GRASS_DIRT);
         imageNames.put(TEXTURE_VOID, TEXTURE_NAME_VOID);
-        imageNames.put(TEXTURE_BARRIER, TEXTURE_NAME_BARRIER);
+        imageNames.put(TEXTURE_WATER, TEXTURE_NAME_WATER);
      
         levelMap = levelMapNone;
     }
