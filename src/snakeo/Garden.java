@@ -54,12 +54,12 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
         this.state = GameState.MENU;
         this.setBackground(Color.WHITE);
 
-        grid = new Grid(61, 30, 20, 20, new Point(20, 50), Color.GREEN);
+        grid = new Grid(32, 15, 40, 40, new Point(20, 50), Color.GREEN);
         lenny = new Snake(Direction.RIGHT, grid, this);
         
         level = new Level(1, this);
         
-        createRectEdge(60, 30, 0, 0);
+        createRectEdge(32, 15, 0, 0);
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
 
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
