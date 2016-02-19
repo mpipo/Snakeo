@@ -33,6 +33,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private final Image healthImage;
     private ArrayList<Barrier> barriers;
     private final ArrayList<Item> items;
+    private final ArrayList<Item0> items0;
     private final Image healthBar00;
     private final Image healthBar10;
     private final Image healthBar20;
@@ -47,21 +48,20 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private GameState state;
     private Image menuBackground;
     private Level level;
+    private MySoundManager soundManager;
 
 //</editor-fold>
-    
     public Garden() {
         this.state = GameState.MENU;
         this.setBackground(Color.WHITE);
 
         grid = new Grid(32, 15, 40, 40, new Point(20, 50), Color.GREEN);
         lenny = new Snake(Direction.RIGHT, grid, this);
-        
+
         level = new Level(1, this);
-        
+
         createRectEdge(32, 15, 0, 0);
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
-
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
         healthBar10 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_10.png");
         healthBar20 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_20.png");
@@ -78,8 +78,11 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
         items.add(new Item(10, 5, "HP_UP", ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"), this));
         items.add(new Item(20, 10, "MP_UP", ResourceTools.loadImageFromResource("snakeo/items/mp_up/225x300.png"), this));
         items.add(new Item(30, 10, "STA_UP", ResourceTools.loadImageFromResource("snakeo/items/sta_up/225x300.png"), this));
-    
+
+        items0 = new ArrayList<>();
+        items0.add(new Item0(5, 5, this));
         this.state = GameState.RUNNING;
+        soundManager = MySoundManager.getSoundManager();
     }
 
     @Override
@@ -114,6 +117,20 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
                 }
             }
         }
+        /*        if (items != null) {
+            for (Item item : items) {
+                if (item.getLocation().equals(lenny.getHead())) {
+                    
+                }
+            }
+        } */
+        if (items0 != null) {
+            for (Item0 items0 : items0) {
+                if (items0.getLocation().equals(lenny.getHead())) {
+                    lenny.addHealth(20);
+                }
+            }
+        }
     }
 
     public boolean checkBarriers(Point location) {
@@ -133,39 +150,54 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
     @Override
     public void keyPressedHandler(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            lenny.setDirection(Direction.UP);
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            lenny.setDirection(Direction.DOWN);
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            lenny.setDirection(Direction.LEFT);
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            lenny.setDirection(Direction.RIGHT);
-        } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            AudioPlayer.play("snakeo/audio/MP5.wav");
-        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            // if state is PAUSED, then set to RUNNING,
-            // else if state is RUNNING, then set to PAUSED
-            if (state == GameState.PAUSED) {
-                state = GameState.RUNNING;
-            } else if (state == GameState.RUNNING) {
-                state = GameState.PAUSED;
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_M) {
-            state = GameState.MENU;
-        } else if (e.getKeyCode() == KeyEvent.VK_SLASH) {
-            if (state == GameState.CONSOLE) {
-                state = GameState.RUNNING;
-            } else if (state == GameState.RUNNING) {
-                state = GameState.CONSOLE;
-            }
-        } else if (e.getKeyCode() == KeyEvent.VK_G) {
-            lenny.addGrowthCounter(3);
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_UP:
+                lenny.setDirection(Direction.UP);
+                break;
+            case KeyEvent.VK_DOWN:
+                lenny.setDirection(Direction.DOWN);
+                break;
+            case KeyEvent.VK_LEFT:
+                lenny.setDirection(Direction.LEFT);
+                break;
+            case KeyEvent.VK_RIGHT:
+                lenny.setDirection(Direction.RIGHT);
+                break;
+            case KeyEvent.VK_SPACE:
+                soundManager.play(MySoundManager.SMG_SOUND, 3);
+                break;
+            case KeyEvent.VK_ESCAPE:
+                // if state is PAUSED, then set to RUNNING,
+                // else if state is RUNNING, then set to PAUSED
+                if (state == GameState.PAUSED) {
+                    state = GameState.RUNNING;
+                } else if (state == GameState.RUNNING) {
+                    state = GameState.PAUSED;
+                }
+                break;
+            case KeyEvent.VK_M:
+                state = GameState.MENU;
+                break;
+            case KeyEvent.VK_SLASH:
+                if (state == GameState.CONSOLE) {
+                    state = GameState.RUNNING;
+                } else if (state == GameState.RUNNING) {
+                    state = GameState.CONSOLE;
+                }
+                break;
+            case KeyEvent.VK_G:
+                lenny.addGrowthCounter(3);
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public void keyReleasedHandler(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            System.out.println("hello");
+        }
     }
 
     @Override
@@ -202,21 +234,23 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     @Override
     public void paintEnvironment(Graphics graphics) {
         if ((state == GameState.RUNNING) || ((state == GameState.PAUSED)) || ((state == GameState.CONSOLE))) {
-
+            checkIntersections();
             if (level != null) {
                 level.draw(graphics);
+                System.out.println(lenny.getHealth());
             }
 
             if (grid != null) {
                 grid.paintComponent(graphics);
             }
-            
+
             if (lenny != null) {
                 lenny.draw(graphics);
             }
             graphics.drawImage(getHealthImage(), 10, 2, 240, 45, this);
 
             if (barriers != null) {
+                drawBarriersLv1();
                 for (int i = 0; i < barriers.size(); i++) {
                     barriers.get(i).draw(graphics);
 
@@ -228,7 +262,11 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
                 }
             }
-
+            if (items0 != null) {
+                for (int i = 0; i < items0.size(); i++) {
+                    items0.get(i).draw(graphics);
+                }
+            }
             if (state == GameState.PAUSED) {
                 graphics.setColor(PAUSE_OVERLAY);
                 graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -238,7 +276,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
                 graphics.drawString("PAUSED", this.getWidth() / 2, this.getHeight() / 2);
 
             } else if (state == GameState.CONSOLE) {
-                new Console(0, 350, this.getWidth(), this.getHeight() / 2, "Style_Default").draw(graphics);
+                new Console(0, this.getHeight() / 2, this.getWidth(), this.getHeight() / 2, "Style_Default").draw(graphics);
             }
 
         } else if (state == GameState.MENU) {
@@ -265,24 +303,81 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
         barriers = new ArrayList<>();
         // upper
         for (int x = xst; x < width + xst; x++) {
-            barriers.add(new Barrier(x, 0, Color.GREEN, this, false));
+            barriers.add(new Barrier(x, 0, Color.GREEN, this, false, false));
         }
         // right side
         for (int y = yst; y <= height + yst; y++) {
-            barriers.add(new Barrier(width, y, Color.GREEN, this, false));
+            barriers.add(new Barrier(width, y, Color.GREEN, this, false, false));
         }
         // bottom
         for (int x = xst; x < width + xst; x++) {
-            barriers.add(new Barrier(x, height, Color.GREEN, this, false));
+            barriers.add(new Barrier(x, height, Color.GREEN, this, false, false));
         }
         // left side
         for (int y = yst; y < height + yst; y++) {
-            barriers.add(new Barrier(0, y, Color.GREEN, this, false));
+            barriers.add(new Barrier(0, y, Color.GREEN, this, false, false));
         }
     }
 
-
+    // an uber crappy implementation because i have no idea what's going on
+    private void drawBarriersLv1() {
+//<editor-fold defaultstate="collapsed" desc="x=11">
+        barriers.add(new Barrier(11, 0, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 1, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 2, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 3, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 4, Color.BLACK, this, false, true));
+//        barriers.add(new Barrier(11, 5, Color.BLACK, this, false, true));
+//        barriers.add(new Barrier(11, 6, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 7, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 8, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 9, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 10, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 11, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 12, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 13, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 14, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(11, 15, Color.BLACK, this, false, true));
+//</editor-fold>
+//<editor-fold defaultstate="collapsed" desc="x=12">
+        barriers.add(new Barrier(12, 0, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 1, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 2, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 3, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 4, Color.BLACK, this, false, true));
+//        barriers.add(new Barrier(11, 5, Color.BLACK, this, false, true));
+//        barriers.add(new Barrier(11, 6, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 7, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 8, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 9, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 10, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 11, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 12, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 13, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 14, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(12, 15, Color.BLACK, this, false, true));
+//</editor-fold>
+//<editor-fold defaultstate="collapsed" desc="x=13">
+        barriers.add(new Barrier(13, 0, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 1, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 2, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 3, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 4, Color.BLACK, this, false, true));
+//        barriers.add(new Barrier(11, 5, Color.BLACK, this, false, true));
+//        barriers.add(new Barrier(11, 6, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 7, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 8, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 9, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 10, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 11, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 12, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 13, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 14, Color.BLACK, this, false, true));
+        barriers.add(new Barrier(13, 15, Color.BLACK, this, false, true));
+//</editor-fold>
+    }
 //<editor-fold defaultstate="collapsed" desc="CellDataProviderIntf">
+
     @Override
     public int getCellWidth() {
         return grid.getCellWidth();

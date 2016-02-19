@@ -5,6 +5,7 @@
  */
 package snakeo;
 
+import images.ResourceTools;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -13,10 +14,10 @@ import java.awt.Point;
  *
  * @author panpjp
  */
-public class Item {
+public class Item0 {
 
     public void draw(Graphics graphics) {
-        graphics.drawImage(image,
+        graphics.drawImage(ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"),
                 cellData.getSystemCoordX(x, y),
                 cellData.getSystemCoordY(x, y),
                 cellData.getCellWidth(),
@@ -24,11 +25,10 @@ public class Item {
                 null);
     }
 
-    public Item(int x, int y, String type, Image image,
+    public Item0(int x, int y,
             CellDataProviderIntf cellData) {
         this.x = x;
         this.y = y;
-        this.type = type;
         this.image = image;
         this.cellData = cellData;
     }
@@ -94,11 +94,11 @@ public class Item {
     public void setImage(Image image) {
         this.image = image;
     }
-    public Point getLocation(int itemCode) {
-        if (true) {
-            
-        }
+    public Point getLocation() {
         return new Point(x, y);
+    }
+    public String getItemName() {
+        return "HP Potion";
     }
 //</editor-fold>
 

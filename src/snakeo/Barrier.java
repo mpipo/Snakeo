@@ -14,44 +14,53 @@ import java.awt.Point;
  * @author panpjp
  */
 public class Barrier {
-    public Barrier(int x, int y, Color color, CellDataProviderIntf cellData, boolean breakable){
+
+    public Barrier(int x, int y, Color color, CellDataProviderIntf cellData, boolean breakable, boolean isTransparent) {
         this.x = x;
         this.y = y;
         this.color = color;
         this.cellData = cellData;
         this.breakable = breakable;
+        this.isTransparent = isTransparent;
     }
 
     private int x, y;
     private Color color;
     private boolean breakable = false;
     private CellDataProviderIntf cellData;
+    private final boolean isTransparent;
 
-    
-    public void draw(Graphics graphics){
-        graphics.setColor(color);
-        graphics.fill3DRect(cellData.getSystemCoordX(x, y),
-                cellData.getSystemCoordY(x, y),
-                cellData.getCellWidth(),
-                cellData.getCellHeight(),
-                true);
+    public void draw(Graphics graphics) {
+        if (isTransparent == true) {
+
+        } else if (isTransparent == false) {
+            graphics.setColor(color);
+            graphics.fill3DRect(cellData.getSystemCoordX(x, y),
+                    cellData.getSystemCoordY(x, y),
+                    cellData.getCellWidth(),
+                    cellData.getCellHeight(),
+                    true);
+        }
+
     }
-    
 
-    
-    public Point getLocation(){
+    public Point getLocation() {
         return new Point(x, y);
     }
+
     public int getX() {
         return x;
     }
+
     public int setX(int x) {
         this.x = x;
         return 0;
     }
+
     public int getY() {
         return y;
     }
+
     public int setY(int y) {
         this.y = y;
         return 0;
