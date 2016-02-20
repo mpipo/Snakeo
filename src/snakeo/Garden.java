@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 import snakeo.levels.Level;
 
 /**
@@ -34,6 +35,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private ArrayList<Barrier> barriers;
     private final ArrayList<Item> items;
     private final ArrayList<Item0> items0;
+    private final ArrayList<Item1> items1;
     private final Image healthBar00;
     private final Image healthBar10;
     private final Image healthBar20;
@@ -50,8 +52,19 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private Level level;
     private MySoundManager soundManager;
 
+    private  ArrayList<Barrier> getCopyOfBarriers(){
+         ArrayList<Barrier> copy = new  ArrayList<>();
+         for (Barrier barrier : barriers){
+             copy.add(barrier);
+         }
+         return copy;
+    }
+    
 //</editor-fold>
+    
     public Garden() {
+        createRectEdge(32, 15, 0, 0);
+
         this.state = GameState.MENU;
         this.setBackground(Color.WHITE);
 
@@ -60,7 +73,6 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
         level = new Level(1, this);
 
-        createRectEdge(32, 15, 0, 0);
         healthImage = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
         healthBar00 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_empty.png");
         healthBar10 = ResourceTools.loadImageFromResource("snakeo/ui/healthbar/hb_10.png");
@@ -81,10 +93,21 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
         items0 = new ArrayList<>();
         items0.add(new Item0(5, 5, this));
+        
+        items1 = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            items1.add(new Item1(randInt(0, 30), randInt(0, 15), this));
+        }
+        
         this.state = GameState.RUNNING;
         soundManager = MySoundManager.getSoundManager();
     }
-
+    
+    private int randInt(int min, int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
+    }
     @Override
     public void initializeEnvironment() {
     }
@@ -101,6 +124,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
                 if (moveDelay >= moveDelayLimit) {
                     moveDelay = 3;
                     lenny.move();
+                    checkIntersections();
                 } else {
                     moveDelay++;
                 }
@@ -111,7 +135,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
     public void checkIntersections() {
         if (barriers != null) {
-            for (Barrier barrier : barriers) {
+            for (Barrier barrier : getCopyOfBarriers()) {
                 if (barrier.getLocation().equals(lenny.getHead())) {
                     lenny.rmHealth(100);
                 }
@@ -128,6 +152,17 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
             for (Item0 items0 : items0) {
                 if (items0.getLocation().equals(lenny.getHead())) {
                     lenny.addHealth(20);
+                    items0.setX(-1000);
+                    items0.setY(-1000);
+                }
+            }
+        }
+        if (items1 != null) {
+            for (Item1 items1 : items1) {
+                if (items1.getLocation().equals(lenny.getHead())) {
+                    lenny.rmHealth(20);
+                    items1.setX(1000);
+                    items1.setY(-1000);
                 }
             }
         }
@@ -135,7 +170,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
     public boolean checkBarriers(Point location) {
         if (barriers != null) {
-            for (Barrier barrier : barriers) {
+            for (Barrier barrier : getCopyOfBarriers()) {
                 if (barrier.getLocation().equals(location)) {
                     return true;
                 }
@@ -234,7 +269,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     @Override
     public void paintEnvironment(Graphics graphics) {
         if ((state == GameState.RUNNING) || ((state == GameState.PAUSED)) || ((state == GameState.CONSOLE))) {
-            checkIntersections();
+            
             if (level != null) {
                 level.draw(graphics);
                 System.out.println(lenny.getHealth());
@@ -251,8 +286,8 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
 
             if (barriers != null) {
                 drawBarriersLv1();
-                for (int i = 0; i < barriers.size(); i++) {
-                    barriers.get(i).draw(graphics);
+                for (Barrier barrier : getCopyOfBarriers()) {
+                    barrier.draw(graphics);
 
                 }
             }
@@ -265,6 +300,11 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
             if (items0 != null) {
                 for (int i = 0; i < items0.size(); i++) {
                     items0.get(i).draw(graphics);
+                }
+            }
+            if (items1 != null) {
+                for (int i = 0; i < items1.size(); i++) {
+                    items1.get(i).draw(graphics);
                 }
             }
             if (state == GameState.PAUSED) {
