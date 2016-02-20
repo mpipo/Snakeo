@@ -231,7 +231,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     @Override
     public void keyReleasedHandler(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_R) {
-            System.out.println("hello");
+//            System.out.println("hello");
         }
     }
 
@@ -272,7 +272,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
             
             if (level != null) {
                 level.draw(graphics);
-                System.out.println(lenny.getHealth());
+//                System.out.println(lenny.getHealth());
             }
 
             if (grid != null) {
