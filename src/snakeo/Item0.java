@@ -18,7 +18,7 @@ import java.awt.Point;
 public class Item0 {
 
     public void draw(Graphics graphics) {
-        graphics.drawImage(ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png"),
+        graphics.drawImage(image,
                 cellData.getSystemCoordX(x, y),
                 cellData.getSystemCoordY(x, y),
                 cellData.getCellWidth(),
@@ -26,11 +26,10 @@ public class Item0 {
                 null);
     }
 
-    public Item0(int x, int y,
-            CellDataProviderIntf cellData) {
+    public Item0(int x, int y, CellDataProviderIntf cellData) {
         this.x = x;
         this.y = y;
-        this.image = image;
+        this.image = ResourceTools.loadImageFromResource("snakeo/items/hp_up/225x300.png");
         this.cellData = cellData;
     }
 

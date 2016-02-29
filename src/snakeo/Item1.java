@@ -27,8 +27,7 @@ public class Item1 {
                 null);
     }
 
-    public Item1(int x, int y,
-            CellDataProviderIntf cellData) {
+    public Item1(int x, int y, CellDataProviderIntf cellData) {
         this.x = x;
         this.y = y;
         this.image = image;

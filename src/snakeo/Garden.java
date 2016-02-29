@@ -34,8 +34,8 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private final Image healthImage;
     private ArrayList<Barrier> barriers;
     private final ArrayList<Item> items;
-    private final ArrayList<Item0> items0;
-    private final ArrayList<Item1> items1;
+    private final ArrayList<Item> items0;
+    private final ArrayList<Item> items1;
     private final Image healthBar00;
     private final Image healthBar10;
     private final Image healthBar20;
@@ -52,16 +52,39 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private Level level;
     private MySoundManager soundManager;
 
-    private  ArrayList<Barrier> getCopyOfBarriers(){
-         ArrayList<Barrier> copy = new  ArrayList<>();
-         for (Barrier barrier : barriers){
-             copy.add(barrier);
-         }
-         return copy;
+    private ArrayList<Barrier> getCopyOfBarriers() {
+        ArrayList<Barrier> copy = new ArrayList<>();
+        for (Barrier barrier : barriers) {
+            copy.add(barrier);
+        }
+        return copy;
     }
-    
+
+//    private  ArrayList<Item> getCopyItems(){
+//         ArrayList<Item> copy = new  ArrayList<>();
+//         for (Item item : items){
+//             copy.add(item);
+//         }
+//         return copy;
+//    }
+    private ArrayList<Item> getCopyItem0s() {
+        ArrayList<Item> copy = new ArrayList<>();
+
+        for (Item item : items0) {
+            copy.add(item);
+        }
+        return copy;
+    }
+
+    private ArrayList<Item> getCopyItem1s() {
+        ArrayList<Item> copy = new ArrayList<>();
+        for (Item item : items1) {
+            copy.add(item);
+        }
+        return copy;
+    }
+
 //</editor-fold>
-    
     public Garden() {
         createRectEdge(32, 15, 0, 0);
 
@@ -92,22 +115,23 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
         items.add(new Item(30, 10, "STA_UP", ResourceTools.loadImageFromResource("snakeo/items/sta_up/225x300.png"), this));
 
         items0 = new ArrayList<>();
-        items0.add(new Item0(5, 5, this));
-        
+        items0.add(new Item(5, 5, Item.ITEM_TYPE_POISON, this));
+
         items1 = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            items1.add(new Item1(randInt(0, 30), randInt(0, 15), this));
+            items1.add(new Item(randInt(0, 30), randInt(0, 15), this));
         }
-        
+
         this.state = GameState.RUNNING;
         soundManager = MySoundManager.getSoundManager();
     }
-    
+
     private int randInt(int min, int max) {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
+
     @Override
     public void initializeEnvironment() {
     }
@@ -136,9 +160,11 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     private void addZero() {
         items0.add(new Item0(randInt(0, 30), randInt(0, 15), this));
     }
+
     private void addOne() {
         items1.add(new Item1(randInt(0, 30), randInt(0, 15), this));
     }
+
     public void checkIntersections() {
         if (barriers != null) {
             for (Barrier barrier : getCopyOfBarriers()) {
@@ -155,21 +181,21 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
             }
         } */
         if (items0 != null) {
-            for (Item0 items0 : items0) {
-                if (items0.getLocation().equals(lenny.getHead())) {
+            for (Item item0 : getCopyItem0s()) {
+                if (item0.getLocation().equals(lenny.getHead())) {
                     lenny.addHealth(20);
-                    items0.setX(-1000);
-                    items0.setY(-1000);
+                    item0.setX(-1000);
+                    item0.setY(-1000);
                     addZero();
                 }
             }
         }
         if (items1 != null) {
-            for (Item1 items1 : items1) {
-                if (items1.getLocation().equals(lenny.getHead())) {
+            for (Item item1 : getCopyItem1s()) {
+                if (item1.getLocation().equals(lenny.getHead())) {
                     lenny.rmHealth(20);
-                    items1.setX(1000);
-                    items1.setY(-1000);
+                    item1.setX(1000);
+                    item1.setY(-1000);
                     addOne();
                 }
             }
@@ -277,7 +303,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
     @Override
     public void paintEnvironment(Graphics graphics) {
         if ((state == GameState.RUNNING) || ((state == GameState.PAUSED)) || ((state == GameState.CONSOLE))) {
-            
+
             if (level != null) {
                 level.draw(graphics);
 //                System.out.println(lenny.getHealth());
