@@ -133,6 +133,12 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
         }
     }
 
+    private void addZero() {
+        items0.add(new Item0(randInt(0, 30), randInt(0, 15), this));
+    }
+    private void addOne() {
+        items1.add(new Item1(randInt(0, 30), randInt(0, 15), this));
+    }
     public void checkIntersections() {
         if (barriers != null) {
             for (Barrier barrier : getCopyOfBarriers()) {
@@ -154,6 +160,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
                     lenny.addHealth(20);
                     items0.setX(-1000);
                     items0.setY(-1000);
+                    addZero();
                 }
             }
         }
@@ -163,6 +170,7 @@ final class Garden extends Environment implements CellDataProviderIntf, Location
                     lenny.rmHealth(20);
                     items1.setX(1000);
                     items1.setY(-1000);
+                    addOne();
                 }
             }
         }
